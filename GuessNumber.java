@@ -1,5 +1,7 @@
 import java.util.Random;
+import java.util.Set;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 class GuessNumber {
   private static GuessNumber self;
@@ -37,6 +39,9 @@ class GuessNumber {
   }
 
   public String getAB(String anwser) {
+    if(!isAnswerOk(anwser))
+        return "答案格式不合法";
+
     int nA = 0;
     int nB = 0;
 
@@ -52,6 +57,31 @@ class GuessNumber {
       }
     }
 
+    if(nA == 4) 
+      return "SUCCESS";
+
     return nA + "A" + nB + "B";
+  }
+
+  // 確認答題的答案是合法的
+  private boolean isAnswerOk(String anwser) {
+    if(anwser.length() != 4) return false;
+
+    if(!isNumeric(anwser)) return false;
+
+    Set<String> stringSet = new HashSet<>();
+    for(int i = 0; i < 4; i++) {
+      stringSet.add(String.valueOf(anwser.charAt(i)));
+    }
+
+    // 數量不一樣表示有資料重複
+    if(stringSet.size() != anwser.length())
+      return false;
+
+    return true;
+  }
+
+  private boolean isNumeric(String str) {
+    return str.matches("-?\\d+(\\.\\d+)?");  //match a number with optional '-' and decimal.
   }
 }
